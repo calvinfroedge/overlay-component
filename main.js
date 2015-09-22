@@ -118,10 +118,8 @@
         var offset = parseInt(contentContainer.css('top').replace('px', ''));
 
         var windowheight = $(window).height();
-        if(windowheight < height + offset){
-          var newHeight = windowheight - (2 * offset);
-          contentContainer.css('height', windowheight - (2 * offset) + 'px');
-        }
+        var newHeight = windowheight - (2 * offset);
+        contentContainer.css('height', windowheight - (2 * offset) + 'px');
       }
 
       /*
