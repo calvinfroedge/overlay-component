@@ -1,6 +1,6 @@
 {
   "name": "overlay-component",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "authors": [
     "Calvin Froedge <calvinfroedge@gmail.com>"
   ],
@@ -13,6 +13,6 @@
     "tests"
   ],
   "dependencies": {
-    "jquery": "~2.1.4"
+    "jquery": ">=2.1.4"
   }
 }

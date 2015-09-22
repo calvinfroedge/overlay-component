@@ -27,9 +27,12 @@
      * Overlay
      */
     var Overlay = function(content, o){
-      $('.overlay').remove();
       var o = o || {};
       var overlay = $('<div class="overlay"><div class="overlay-bg"></div><div class="overlay-content-wrapper"><a href="#" class="overlay-close">Close</a><div class="overlay-content"></div></div></div>');
+
+      //use this for event tracking
+      var launchId = (new Date()).getTime();
+      overlay.attr('data-overlay-launched', launchId);
 
       els.container = overlay;
 
@@ -135,7 +138,8 @@
        */
       var close = function(){
         overlay.fadeOut('fast', function(){
-          $(window).off('resize.overlay');
+          $(window).off('resize.overlay-'+launchId);
+          $(window).off('keydown.overlay-'+launchId);
           overlay.off();
           overlay.remove();
 
@@ -173,9 +177,39 @@
       /*
        * When the window resizes, reposition the overlay
        */
-      $(window).on('resize.overlay', function(){
+      $(window).on('resize.overlay-'+launchId, function(){
         positionAndConstrain();
       });
+
+      /*
+       * When the escape key is pressed, close overlay
+       */
+      if(!o.escapeDisabled){
+        $(window).on('keydown.overlay-'+launchId, function(e){
+          var attr = 'data-overlay-launched';
+          if(e.which == 27){
+            //is this overlay is the most recently launched, close it
+            var times = [];
+            var last = $('['+attr+']');
+            last.each(function(){
+              times.push(parseInt($(this).attr(attr)));
+            });
+
+            if(parseInt(overlay.attr(attr)) == Math.max.apply(null, times)){
+              close();
+            }
+          }
+        });
+      }
+
+      /*
+       * When the user clicks outside of the content area, close the overlay
+       */
+      if(!o.bgClickDisabled){
+        bg.on('click', function(){
+          close();
+        });
+      }
 
       /*
        * Return API for interacting with the overlay programmatically
